@@ -8,9 +8,22 @@ data <- read_csv(url)
 
 head(data)
 
+colSums(is.na(data))
+colSums(is.na(data)) / nrow(data) * 100
+
 drug_cols <- c("Alcohol","Amphet","Amyl","Benzos","Caff","Cannabis",
                "Choc","Coke","Crack","Ecstasy","Heroin","Ketamine",
                "Legalh","LSD","Meth","Mushrooms","Nicotine","Semer","VSA")
+
+# Check if any drug column contains invalid values
+invalid_drugs <- lapply(drug_cols, function(col) {
+  unique(data[[col]][!data[[col]] %in% paste0("CL", 0:6)])
+})
+
+invalid_drugs
+
+pers_cols <- c("Nscore","Escore","Oscore","AScore","Cscore","Impulsive","SS")
+summary(data[pers_cols])
 
 df <- data %>%
   mutate(across(all_of(drug_cols),
