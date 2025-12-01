@@ -14,7 +14,7 @@ df <- data %>%
   mutate(across(all_of(drug_cols),
                 ~ as.numeric(gsub("CL","", as.character(.)))))
 
-# Radar Plot for Each Non-Personality Attributes
+# Radar Plot for Each Demographic Attributes
 
 cat_vars <- c("Age", "Gender", "Education", "Country", "Ethnicity")
 top_n <- 5
