@@ -6,6 +6,8 @@ library(RColorBrewer)
 url <- "https://raw.githubusercontent.com/RobbenWijanathan/drug-consumption-regression/main/drug_consumption.csv"
 data <- read_csv(url)
 
+head(data)
+
 drug_cols <- c("Alcohol","Amphet","Amyl","Benzos","Caff","Cannabis",
                "Choc","Coke","Crack","Ecstasy","Heroin","Ketamine",
                "Legalh","LSD","Meth","Mushrooms","Nicotine","Semer","VSA")
