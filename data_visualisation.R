@@ -14,6 +14,8 @@ df <- data %>%
   mutate(across(all_of(drug_cols),
                 ~ as.numeric(gsub("CL","", as.character(.)))))
 
+# Radar Plot for Each Non-Personality Attributes
+
 cat_vars <- c("Age", "Gender", "Education", "Country", "Ethnicity")
 top_n <- 5
 
@@ -63,7 +65,6 @@ for (var in cat_vars) {
       mar = c(2, 2, 3, 8),   
       xpd = NA)           
   
-  # Plot
   radarchart(radar_df,
              axistype = 1,
              pcol = line_cols,
@@ -93,6 +94,8 @@ for (var in cat_vars) {
   
 }
 
+# Spearman Correlation Plot for Each Personality Attributes
+
 library(reshape2)   
 
 pers_cols <- c("Nscore","Escore","Oscore","AScore","Cscore","Impulsive","SS")
@@ -106,10 +109,12 @@ corr_sub <- corr_mat[pers_cols, drug_cols]
 
 corr_long <- reshape2::melt(corr_sub, varnames = c("personality","drug"), value.name = "Correlation")
 
-ggplot(corr_long, aes(x = drug, y = personality, fill = rho)) +
+ggplot(corr_long, aes(x = drug, y = personality, fill = Correlation)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0, limits = c(-1,1)) +
-  geom_text(aes(label = round(rho, 2)), size = 3) +
+  geom_text(aes(label = round(Correlation, 2)), size = 3) +
   labs(title = "Spearman Correlation (Personality vs Drugs)", x = NULL, y = NULL) +
   theme_minimal(base_size = 12) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
