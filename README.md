@@ -1,3 +1,14 @@
-# Drug Consumption Regression
+# Drug Consumption Analysis
 
-This project explores the relationship between personality traits and drug consumption behaviors using the Drug Consumption (Quantified) dataset. The dataset contains personality measures based on the NEO-FFI-R model, impulsivity, sensation seeking, and demographic attributes for 1,885 respondents. Machine learning classification techniques are applied to predict an individual’s likelihood of drug use from these features. Results indicate that specific personality dimensions, particularly openness and impulsivity, are significant predictors of substance use behavior. The findings highlight the potential of data-driven models to identify psychological and social factors influencing drug consumption patterns.
+This project analyzes drug consumption patterns using a multivariate dataset containing demographic, personality, and behavioural attributes. The study includes data preprocessing, exploratory analysis, visualization, and predictive modelling in R. The goal is to identify key factors associated with drug usage and evaluate model performance.
+
+The results show behavioural trends across demographic groups and significant correlations between personality traits and substance use.
+
+## Methods
+- Data preprocessing  
+- Exploratory data analysis  
+- Visualization  
+- Predictive modelling in R
+
+## Dataset
+Multivariate dataset with demographic, personality, and behavioural variables related to drug usage.
