@@ -4,6 +4,8 @@ library(dplyr)
 url_quantified <- "https://raw.githubusercontent.com/RobbenWijanathan/drug-consumption-regression/main/drug_consumption_quantified.csv"
 df <- read_csv(url_quantified)
 
+df
+
 drug_cols <- c("Alcohol","Amphet","Amyl","Benzos","Caff","Cannabis",
                "Choc","Coke","Crack","Ecstasy","Heroin","Ketamine",
                "Legalh","LSD","Meth","Mushrooms","Nicotine","VSA")
@@ -12,6 +14,9 @@ df[drug_cols] <- lapply(df[drug_cols], function(x) {
   as.numeric(gsub("CL", "", x))
 })
 
+df <- df[df$Semer == "CL0", ]
+df
+
 df$Age <- as.factor(df$Age)
 df$Gender <- as.factor(df$Gender)
 df$Education <- as.factor(df$Education)
@@ -19,30 +24,36 @@ df$Country <- as.factor(df$Country)
 df$Ethnicity <- as.factor(df$Ethnicity)
 
 df_cleaned <- na.omit(df)
-df_cleaned
+df_cleaned <- df_cleaned %>% select(-Semer, -ID)
+
+target_drugs <- c("Alcohol","Amphet","Amyl","Benzos","Caff","Cannabis","Choc","Coke","Crack","Ecstasy","Heroin","Ketamine",
+               "Legalh","LSD","Meth","Mushrooms","Nicotine","VSA")
 
 predictors <- df_cleaned %>%
-  select(-ID, -all_of(drug_cols))
+  select(-all_of(target_drugs))
 
 X<- model.matrix(~ ., predictors)
 X <- as.data.frame(X[, -1])
-df_numeric <- cbind(X, df_cleaned[, drug_cols])
-
+df_numeric <- cbind(X, df_cleaned[, target_drugs])
 
 # --- FIXED CORRELATION ---
-predictor_cols <- setdiff(names(df_numeric), drug_cols)
-corr <- cor(df_numeric[, drug_cols], df_numeric[, predictor_cols])
+predictor_cols <- setdiff(names(df_numeric), target_drugs)
 
-selected_predictors <- apply(corr, 2, function(col) any(abs(col) >= 0.25))
-best_predictors <- names(selected_predictors)[selected_predictors]
+predictor_cols <- predictor_cols[complete.cases(predictor_cols)]
+predictor_cols
+corr <- cor(df_numeric[, target_drugs], df_numeric[, predictor_cols])
+
+#selected_predictors <- apply(corr, 2, function(col) any(abs(col) >= 0.25))
+#best_predictors <- names(selected_predictors)[selected_predictors]
 # Check predictors
-best_predictors
-best_predictors_clean <- gsub("[0-9.-]+$", "", best_predictors)  # Remove trailing numbers
+#best_predictors
+best_predictors_clean <- gsub("[0-9.-]+$", "", predictor_cols)  # Remove trailing numbers
 best_predictors_clean <- unique(best_predictors_clean)
+best_predictors_clean
 
 # --- BUILD FORMULA ---
 formula_multi <- as.formula(
-  paste("cbind(", paste(drug_cols, collapse=","), ") ~ ",
+  paste("cbind(", paste(target_drugs, collapse=","), ") ~ ",
         paste(best_predictors_clean, collapse = " + "))
 )
 formula_multi
@@ -67,3 +78,4 @@ actual <- test_data[, drug_cols]
 
 rmse <- sqrt(colMeans((predictions - actual)^2))
 rmse
+
