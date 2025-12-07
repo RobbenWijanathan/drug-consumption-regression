@@ -36,22 +36,16 @@ X<- model.matrix(~ ., predictors)
 X <- as.data.frame(X[, -1])
 df_numeric <- cbind(X, df_cleaned[, target_drugs])
 
-# --- FIXED CORRELATION ---
 predictor_cols <- setdiff(names(df_numeric), target_drugs)
 
 predictor_cols <- predictor_cols[complete.cases(predictor_cols)]
 predictor_cols
 corr <- cor(df_numeric[, target_drugs], df_numeric[, predictor_cols])
 
-#selected_predictors <- apply(corr, 2, function(col) any(abs(col) >= 0.25))
-#best_predictors <- names(selected_predictors)[selected_predictors]
-# Check predictors
-#best_predictors
 best_predictors_clean <- gsub("[0-9.-]+$", "", predictor_cols)  # Remove trailing numbers
 best_predictors_clean <- unique(best_predictors_clean)
 best_predictors_clean
 
-# --- BUILD FORMULA ---
 formula_multi <- as.formula(
   paste("cbind(", paste(target_drugs, collapse=","), ") ~ ",
         paste(best_predictors_clean, collapse = " + "))
@@ -60,7 +54,6 @@ formula_multi
 
 set.seed(123)
 
-# Create index
 n <- nrow(df_numeric)
 train_index <- sample(1:n, size = 0.7*n)
 
