@@ -42,7 +42,7 @@ predictor_cols <- predictor_cols[complete.cases(predictor_cols)]
 predictor_cols
 corr <- cor(df_numeric[, target_drugs], df_numeric[, predictor_cols])
 
-best_predictors_clean <- gsub("[0-9.-]+$", "", predictor_cols)  # Remove trailing numbers
+best_predictors_clean <- gsub("[0-9.-]+$", "", predictor_cols)
 best_predictors_clean <- unique(best_predictors_clean)
 best_predictors_clean
 
